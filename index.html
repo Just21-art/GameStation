@@ -33,28 +33,16 @@
             visibility: hidden;
         }
 
-        .boot-logo {
-            font-size: 50px;
-            font-weight: 900;
-            letter-spacing: 8px;
-            color: #fff;
-            text-transform: uppercase;
-            animation: pulse 1.5s infinite alternate, glitch 3s infinite;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        /* Картинка логотипа */
+        .boot-logo-img {
+            width: 150px; /* Размер логотипа, можешь подкрутить */
+            height: auto;
+            animation: pulse 1.5s infinite alternate;
         }
-
-        .boot-logo span { color: #ff3333; }
 
         @keyframes pulse {
             0% { transform: scale(0.95); opacity: 0.8; }
-            100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 40px rgba(255, 51, 51, 0.8); }
-        }
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.8)); }
         }
 
         /* --- ОСНОВНОЙ КОНТЕНТ --- */
@@ -77,7 +65,7 @@
             animation: fadeInUp 0.8s ease-out;
         }
 
-        .logo {
+        .logo-text {
             font-size: 52px;
             font-weight: 900;
             letter-spacing: 6px;
@@ -194,9 +182,9 @@
         }
 
         @media (max-width: 768px) {
-            .logo { font-size: 36px; letter-spacing: 4px; }
+            .logo-text { font-size: 36px; letter-spacing: 4px; }
             .games-grid { grid-template-columns: 1fr; padding: 20px; }
-            .boot-logo { font-size: 28px; letter-spacing: 4px; }
+            .boot-logo-img { width: 120px; }
         }
     </style>
 </head>
@@ -204,13 +192,14 @@
 
     <!-- ЗАСТАВКА -->
     <div id="boot-screen">
-        <div class="boot-logo"><span>GAME</span>STATION</div>
+        <!-- Вставляем твой логотип -->
+        <img src="https://i.ibb.co/PsbmPWLb/In-Shot-20261125-223850833.png" alt="GameStation Logo" class="boot-logo-img">
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div id="main-content">
         <header>
-            <div class="logo">GAMESTATION</div>
+            <div class="logo-text">GAMESTATION</div>
             <div class="subtitle">Твоя личная игровая платформа</div>
         </header>
 
