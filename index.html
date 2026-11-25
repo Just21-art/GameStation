@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Just21 GameStation</title>
+    <title>GameStation</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -16,7 +16,56 @@
                 radial-gradient(circle at 85% 30%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
         }
 
-        /* Анимация появления */
+        /* --- ЗАСТАВКА (BOOT SCREEN) --- */
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #boot-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .boot-logo {
+            font-size: 50px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #fff;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite alternate, glitch 3s infinite;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .boot-logo span { color: #ff3333; }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 40px rgba(255, 51, 51, 0.8); }
+        }
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
+        #main-content {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        #main-content.show {
+            opacity: 1;
+        }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -29,14 +78,14 @@
         }
 
         .logo {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 900;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             background: linear-gradient(90deg, #ff3333, #ffaa00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 51, 51, 0.3);
+            text-shadow: 0 0 30px rgba(255, 51, 51, 0.4);
         }
 
         .subtitle {
@@ -65,24 +114,16 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             cursor: pointer;
             position: relative;
-            animation: fadeInUp 0.8s ease-out backwards;
             display: flex;
             flex-direction: column;
         }
 
-        /* Задержка анимации для каждой карточки */
-        .game-card:nth-child(1) { animation-delay: 0.1s; }
-        .game-card:nth-child(2) { animation-delay: 0.2s; }
-        .game-card:nth-child(3) { animation-delay: 0.3s; }
-
-        /* Эффект при наведении (работает и при тапе на телефоне) */
         .game-card:hover, .game-card:active {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 51, 51, 0.2);
             border-color: #ff3333;
         }
 
-        /* Картинка-обложка (сейчас это просто цветной блок, потом вставишь свои картинки) */
         .card-image {
             height: 180px;
             background: linear-gradient(45deg, #1a0a0a, #2a1a1a);
@@ -90,21 +131,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
         }
 
-        .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .game-card:hover .card-image img {
-            transform: scale(1.1);
-        }
-
-        /* Бейдж версии */
         .badge {
             position: absolute;
             top: 15px;
@@ -118,7 +146,6 @@
             z-index: 2;
         }
 
-        /* Текстовая часть */
         .card-content {
             padding: 20px;
             flex-grow: 1;
@@ -140,7 +167,6 @@
             flex-grow: 1;
         }
 
-        /* Кнопка играть */
         .play-btn {
             display: block;
             text-align: center;
@@ -158,7 +184,6 @@
             box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
         }
 
-        /* Футер */
         footer {
             text-align: center;
             padding: 30px;
@@ -168,69 +193,83 @@
             margin-top: 40px;
         }
 
-        /* Адаптив под телефоны */
         @media (max-width: 768px) {
-            .logo { font-size: 36px; }
+            .logo { font-size: 36px; letter-spacing: 4px; }
             .games-grid { grid-template-columns: 1fr; padding: 20px; }
-            .game-card:hover { transform: translateY(-5px) scale(1.01); }
+            .boot-logo { font-size: 28px; letter-spacing: 4px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">JUST21 GameStation</div>
-        <div class="subtitle">Твоя личная игровая платформа</div>
-    </header>
+    <!-- ЗАСТАВКА -->
+    <div id="boot-screen">
+        <div class="boot-logo"><span>GAME</span>STATION</div>
+    </div>
 
-    <main class="games-grid">
-        
-        <!-- ИГРА 1: CreamTime -->
-        <div class="game-card">
-            <div class="card-image">
-                <!-- Здесь можно заменить на ссылку на картинку твоей игры -->
-                <span style="font-size: 50px;">🍦</span>
-                <div class="badge">v1.0 Release</div>
-            </div>
-            <div class="card-content">
-                <h2 class="card-title">CreamTime Chapter 1</h2>
-                <p class="card-desc">Атмосферный 3D-хоррор от первого лица. Исследуй заброшенную фабрику, найди предохранители и постарайся сбежать от Мороженосчика. Полноценный релиз первой главы!</p>
-                <!-- Замени ссылку на актуальную ссылку твоей игры -->
-                <a href="https://just21-art.github.io/CreamTime/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
-            </div>
-        </div>
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div id="main-content">
+        <header>
+            <div class="logo">GAMESTATION</div>
+            <div class="subtitle">Твоя личная игровая платформа</div>
+        </header>
 
-        <!-- ИГРА 2: Cube Clash -->
-        <div class="game-card">
-            <div class="card-image">
-                <span style="font-size: 50px;">🟨</span>
-                <div class="badge">v1.5</div>
+        <main class="games-grid">
+            
+            <!-- ИГРА 1 -->
+            <div class="game-card">
+                <div class="card-image">
+                    <span style="font-size: 50px;">🍦</span>
+                    <div class="badge">v1.0 Release</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">CreamTime Chapter 1</h2>
+                    <p class="card-desc">Атмосферный 3D-хоррор от первого лица. Исследуй заброшенную фабрику, найди предохранители и постарайся сбежать от Мороженосчика.</p>
+                    <a href="https://just21-art.github.io/CreamTime/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
+                </div>
             </div>
-            <div class="card-content">
-                <h2 class="card-title">Cube Clash</h2>
-                <p class="card-desc">Динамичный 2D-раннер в стиле Geometry Dash. Прыгай через препятствия на бешеной скорости, ставь рекорды и открывай секретных персонажей, включая Тыкву!</p>
-                <a href="https://just21-art.github.io/Cube-Clash/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
+
+            <!-- ИГРА 2 -->
+            <div class="game-card">
+                <div class="card-image">
+                    <span style="font-size: 50px;">🟨</span>
+                    <div class="badge">v1.5</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Cube Clash</h2>
+                    <p class="card-desc">Динамичный 2D-раннер в стиле Geometry Dash. Прыгай через препятствия на бешеной скорости, ставь рекорды и открывай секретных персонажей.</p>
+                    <a href="https://just21-art.github.io/Cube-Clash/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
+                </div>
             </div>
-        </div>
 
-        <!-- ИГРА 3: Rebate -->
-        <div class="game-card">
-            <div class="card-image">
-                <span style="font-size: 50px;">🚗</span>
-                <div class="badge" style="color: #ffaa00; border-color: #ffaa00;">Alpha 0.9</div>
+            <!-- ИГРА 3 -->
+            <div class="game-card">
+                <div class="card-image">
+                    <span style="font-size: 50px;">🚗</span>
+                    <div class="badge" style="color: #ffaa00; border-color: #ffaa00;">Alpha 0.9</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Rebate</h2>
+                    <p class="card-desc">Аналог классической GTA с видом сверху. Исследуй город, катайся по шоссе и уворачивайся от трафика. Первый шаг к большой 3D-игре!</p>
+                    <a href="https://just21-art.github.io/Rebate/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
+                </div>
             </div>
-            <div class="card-content">
-                <h2 class="card-title">Rebate</h2>
-                <p class="card-desc">Аналог классической GTA с видом сверху. Исследуй город, катайся по шоссе и уворачивайся от трафика. Первый шаг к большой 3D-игре!</p>
-                <a href="https://just21-art.github.io/Rebate/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
-            </div>
-        </div>
 
-    </main>
+        </main>
 
-    <footer>
-        © 2026 Just21. Сделано с душой и на чистом коде.
-    </footer>
+        <footer>
+            © 2026 Just21. Сделано с душой и на чистом коде.
+        </footer>
+    </div>
 
+    <script>
+        // Логика заставки
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('boot-screen').classList.add('fade-out');
+                document.getElementById('main-content').classList.add('show');
+            }, 2500);
+        });
+    </script>
 </body>
 </html>
