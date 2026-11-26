@@ -84,9 +84,31 @@
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        header { text-align: center; padding: 50px 20px 30px; animation: fadeInUp 0.8s ease-out; }
+        header { text-align: center; padding: 50px 20px 30px; animation: fadeInUp 0.8s ease-out; position: relative; }
         .logo-text { font-size: 52px; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; background: linear-gradient(90deg, #ff3333, #ffaa00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 51, 51, 0.4); }
         .subtitle { color: #888; font-size: 16px; margin-top: 10px; letter-spacing: 2px; }
+
+        /* Аватар в углу витрины */
+        .top-right-avatar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff3333, #8a2be2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .top-right-avatar:hover { transform: scale(1.1); }
 
         .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px; max-width: 1200px; margin: 0 auto; }
         .game-card { background: #151515; border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: all 0.3s ease; display: flex; flex-direction: column; position: relative; }
@@ -100,12 +122,56 @@
         .play-btn:hover { background: #ff5555; box-shadow: 0 0 15px rgba(255, 51, 51, 0.5); }
         footer { text-align: center; padding: 30px; color: #555; font-size: 14px; border-top: 1px solid #222; margin-top: 40px; }
 
+        /* --- 4. ЭКРАН ПРОФИЛЯ --- */
+        #profile-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0a0a1a, #1a0033);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        #profile-screen.active { display: flex; }
+
+        .profile-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #8a2be2;
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .profile-card .avatar {
+            width: 100px; height: 100px; font-size: 40px; margin-bottom: 20px;
+        }
+
+        .profile-info { text-align: center; margin-bottom: 30px; }
+        .profile-info h2 { font-size: 28px; margin-bottom: 10px; }
+        .profile-info p { color: #aaa; font-size: 14px; margin-bottom: 5px; }
+
+        .back-btn {
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid #8a2be2;
+            color: white;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: #8a2be2; box-shadow: 0 0 15px #8a2be2; }
+
         @media (max-width: 768px) {
             .logo-text { font-size: 36px; letter-spacing: 4px; }
             .games-grid { grid-template-columns: 1fr; padding: 20px; }
             .boot-logo-img { width: 120px; }
             .login-title { font-size: 28px; }
             .login-logo-corner { width: 60px; top: 20px; left: 20px; }
+            .top-right-avatar { width: 40px; height: 40px; font-size: 18px; }
         }
     </style>
 </head>
@@ -143,6 +209,8 @@
         <header>
             <div class="logo-text">GAMESTATION</div>
             <div class="subtitle">Твоя личная игровая платформа</div>
+            <!-- Аватар в правом верхнем углу -->
+            <div class="top-right-avatar" id="cornerAvatar">M</div>
         </header>
 
         <main class="games-grid">
@@ -176,16 +244,39 @@
         <footer>© 2026 Just21. Сделано с душой и на чистом коде.</footer>
     </div>
 
+    <!-- 4. ЭКРАН ПРОФИЛЯ -->
+    <div id="profile-screen">
+        <div class="profile-card">
+            <div class="avatar" id="profileAvatar">M</div>
+            <div class="profile-info">
+                <h2 id="profileName">Имя</h2>
+                <p>Дата регистрации: <span id="profileDate"></span></p>
+                <p>Статус: <span style="color: #00ff00;">Онлайн</span></p>
+            </div>
+            <button class="back-btn" id="backToGamesBtn">◀ Назад к играм</button>
+        </div>
+    </div>
+
     <script>
         const bootScreen = document.getElementById('boot-screen');
         const loginScreen = document.getElementById('login-screen');
         const mainContent = document.getElementById('main-content');
+        const profileScreen = document.getElementById('profile-screen');
+        
         const showCreateBtn = document.getElementById('showCreateBtn');
         const createForm = document.getElementById('createForm');
         const saveAccountBtn = document.getElementById('saveAccountBtn');
         const userProfile = document.getElementById('userProfile');
         const avatarLetter = document.getElementById('avatarLetter');
         const displayName = document.getElementById('displayName');
+        
+        const cornerAvatar = document.getElementById('cornerAvatar');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileDate = document.getElementById('profileDate');
+        const backToGamesBtn = document.getElementById('backToGamesBtn');
+
+        // --- ЛОГИКА ---
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -203,6 +294,11 @@
                 userProfile.style.display = 'flex';
                 avatarLetter.textContent = savedName.charAt(0).toUpperCase();
                 displayName.textContent = savedName;
+                
+                // Устанавливаем аватар в углу и профиле
+                cornerAvatar.textContent = savedName.charAt(0).toUpperCase();
+                profileAvatar.textContent = savedName.charAt(0).toUpperCase();
+                profileName.textContent = savedName;
             } else {
                 showCreateBtn.style.display = 'flex';
                 userProfile.style.display = 'none';
@@ -223,6 +319,13 @@
 
             localStorage.setItem('gs_username', name);
             localStorage.setItem('gs_password', pass);
+            
+            // Сохраняем дату регистрации, если ее нет
+            if (!localStorage.getItem('gs_date')) {
+                const now = new Date();
+                localStorage.setItem('gs_date', now.toLocaleDateString('ru-RU'));
+            }
+            
             checkSavedAccount();
         });
 
@@ -232,6 +335,20 @@
             setTimeout(() => {
                 mainContent.classList.add('show');
             }, 50);
+            
+            // Загружаем дату
+            const savedDate = localStorage.getItem('gs_date') || 'Неизвестно';
+            profileDate.textContent = savedDate;
+        });
+
+        // Открытие профиля
+        cornerAvatar.addEventListener('click', () => {
+            profileScreen.classList.add('active');
+        });
+
+        // Возврат к играм
+        backToGamesBtn.addEventListener('click', () => {
+            profileScreen.classList.remove('active');
         });
     </script>
 </body>
