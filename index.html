@@ -11,193 +11,134 @@
             background-color: #0a0a0a;
             color: white;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(255, 51, 51, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
         }
 
-        /* --- ЗАСТАВКА (BOOT SCREEN) --- */
+        /* --- 1. ЗАСТАВКА --- */
         #boot-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 1s ease, visibility 1s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; align-items: center; justify-content: center;
+            z-index: 1000; transition: opacity 1s ease, visibility 1s ease;
         }
-
-        #boot-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        /* Картинка логотипа */
+        #boot-screen.fade-out { opacity: 0; visibility: hidden; }
         .boot-logo-img {
-            width: 150px; /* Размер логотипа, можешь подкрутить */
-            height: auto;
+            width: 150px; height: auto;
             animation: pulse 1.5s infinite alternate;
         }
-
         @keyframes pulse {
             0% { transform: scale(0.95); opacity: 0.8; }
-            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.8)); }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 25px rgba(255, 140, 0, 0.9)); }
         }
 
-        /* --- ОСНОВНОЙ КОНТЕНТ --- */
-        #main-content {
-            opacity: 0;
-            transition: opacity 1s ease;
+        /* --- 2. ЭКРАН АККАУНТА --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a0033, #0a001a);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 900;
         }
-        #main-content.show {
-            opacity: 1;
-        }
+        #login-screen.active { display: flex; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .login-logo-corner {
+            position: absolute; top: 30px; left: 30px; width: 80px;
+            opacity: 0.8; animation: fadeIn 1s ease-out;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.8; } }
 
-        header {
-            text-align: center;
-            padding: 50px 20px 30px;
-            animation: fadeInUp 0.8s ease-out;
-        }
+        .login-title { font-size: 36px; font-weight: bold; margin-bottom: 40px; text-shadow: 0 0 20px #8a2be2; text-align: center; }
 
-        .logo-text {
-            font-size: 52px;
-            font-weight: 900;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, #ff3333, #ffaa00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 51, 51, 0.4);
+        .create-account-btn {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: rgba(138, 43, 226, 0.2); border: 3px dashed #8a2be2;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 50px; color: #8a2be2; cursor: pointer;
+            transition: all 0.3s ease; margin-bottom: 20px;
         }
+        .create-account-btn:hover { background: rgba(138, 43, 226, 0.4); transform: scale(1.1); }
 
-        .subtitle {
-            color: #888;
-            font-size: 16px;
-            margin-top: 10px;
-            letter-spacing: 2px;
+        .input-group { display: none; flex-direction: column; gap: 15px; width: 80%; max-width: 300px; margin-top: 20px; }
+        .input-group input {
+            padding: 15px; border-radius: 10px; border: 2px solid #8a2be2;
+            background: rgba(0,0,0,0.6); color: white; font-size: 16px; outline: none;
         }
-       
+        .input-group button {
+            padding: 15px; border-radius: 10px; border: none; background: #8a2be2; color: white;
+            font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .input-group button:hover { background: #a44aff; box-shadow: 0 0 15px #8a2be2; }
 
-        /* Сетка игр */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .user-profile { display: none; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.3s; }
+        .user-profile:hover { transform: scale(1.05); }
+        .avatar {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: linear-gradient(45deg, #ff3333, #8a2be2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 50px; font-weight: bold; color: white;
+            border: 4px solid white; box-shadow: 0 0 20px #8a2be2;
         }
+        .user-name { margin-top: 15px; font-size: 24px; font-weight: bold; }
 
-        /* Карточка игры */
-        .game-card {
-            background: #151515;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid #333;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+        /* --- 3. ВИТРИНА ИГР --- */
+        #main-content { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        #main-content.show { display: block; opacity: 1; }
 
-        .game-card:hover, .game-card:active {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 51, 51, 0.2);
-            border-color: #ff3333;
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card-image {
-            height: 180px;
-            background: linear-gradient(45deg, #1a0a0a, #2a1a1a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+        header { text-align: center; padding: 50px 20px 30px; animation: fadeInUp 0.8s ease-out; }
+        .logo-text { font-size: 52px; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; background: linear-gradient(90deg, #ff3333, #ffaa00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 51, 51, 0.4); }
+        .subtitle { color: #888; font-size: 16px; margin-top: 10px; letter-spacing: 2px; }
 
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            z-index: 2;
-        }
-
-        .card-content {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .card-desc {
-            color: #aaa;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .play-btn {
-            display: block;
-            text-align: center;
-            background: #ff3333;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        .play-btn:hover {
-            background: #ff5555;
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #555;
-            font-size: 14px;
-            border-top: 1px solid #222;
-            margin-top: 40px;
-        }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .game-card { background: #151515; border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: all 0.3s ease; display: flex; flex-direction: column; position: relative; }
+        .game-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 51, 51, 0.2); border-color: #ff3333; }
+        .card-image { height: 180px; background: linear-gradient(45deg, #1a0a0a, #2a1a1a); display: flex; align-items: center; justify-content: center; position: relative; }
+        .badge { position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.8); padding: 5px 10px; border-radius: 20px; font-size: 12px; color: #00ff00; border: 1px solid #00ff00; z-index: 2; }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 22px; margin-bottom: 10px; color: #fff; }
+        .card-desc { color: #aaa; font-size: 14px; line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
+        .play-btn { display: block; text-align: center; background: #ff3333; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .play-btn:hover { background: #ff5555; box-shadow: 0 0 15px rgba(255, 51, 51, 0.5); }
+        footer { text-align: center; padding: 30px; color: #555; font-size: 14px; border-top: 1px solid #222; margin-top: 40px; }
 
         @media (max-width: 768px) {
             .logo-text { font-size: 36px; letter-spacing: 4px; }
             .games-grid { grid-template-columns: 1fr; padding: 20px; }
             .boot-logo-img { width: 120px; }
+            .login-title { font-size: 28px; }
+            .login-logo-corner { width: 60px; top: 20px; left: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ЗАСТАВКА -->
+    <!-- 1. ЗАСТАВКА -->
     <div id="boot-screen">
-        <!-- Вставляем твой логотип -->
         <img src="https://i.ibb.co/PsbmPWLb/In-Shot-20261125-223850833.png" alt="GameStation Logo" class="boot-logo-img">
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <!-- 2. ЭКРАН АККАУНТА -->
+    <div id="login-screen">
+        <img src="https://i.ibb.co/PsbmPWLb/In-Shot-20261125-223850833.png" alt="Logo" class="login-logo-corner">
+
+        <div class="login-title">Добро пожаловать в GameStation</div>
+        
+        <div class="create-account-btn" id="showCreateBtn">+</div>
+        <p style="color:#aaa; margin-bottom: 20px;">Создать профиль</p>
+
+        <div class="input-group" id="createForm">
+            <input type="text" id="usernameInput" placeholder="Введите имя" maxlength="15">
+            <input type="password" id="passwordInput" placeholder="Придумайте пароль">
+            <button id="saveAccountBtn">Создать аккаунт</button>
+        </div>
+
+        <div class="user-profile" id="userProfile">
+            <div class="avatar" id="avatarLetter">G</div>
+            <div class="user-name" id="displayName">Игрок</div>
+            <p style="color:#aaa; font-size:12px; margin-top:5px;">Нажмите, чтобы войти</p>
+        </div>
+    </div>
+
+    <!-- 3. ВИТРИНА ИГР -->
     <div id="main-content">
         <header>
             <div class="logo-text">GAMESTATION</div>
@@ -205,13 +146,8 @@
         </header>
 
         <main class="games-grid">
-            
-            <!-- ИГРА 1 -->
             <div class="game-card">
-                <div class="card-image">
-                    <span style="font-size: 50px;">🍦</span>
-                    <div class="badge">v1.0 Release</div>
-                </div>
+                <div class="card-image"><span style="font-size: 50px;">🍦</span><div class="badge">v1.0 Release</div></div>
                 <div class="card-content">
                     <h2 class="card-title">CreamTime Chapter 1</h2>
                     <p class="card-desc">Атмосферный 3D-хоррор от первого лица. Исследуй заброшенную фабрику, найди предохранители и постарайся сбежать от Мороженосчика.</p>
@@ -219,12 +155,8 @@
                 </div>
             </div>
 
-            <!-- ИГРА 2 -->
             <div class="game-card">
-                <div class="card-image">
-                    <span style="font-size: 50px;">🟨</span>
-                    <div class="badge">v1.5</div>
-                </div>
+                <div class="card-image"><span style="font-size: 50px;">🟨</span><div class="badge">v1.5</div></div>
                 <div class="card-content">
                     <h2 class="card-title">Cube Clash</h2>
                     <p class="card-desc">Динамичный 2D-раннер в стиле Geometry Dash. Прыгай через препятствия на бешеной скорости, ставь рекорды и открывай секретных персонажей.</p>
@@ -232,33 +164,74 @@
                 </div>
             </div>
 
-            <!-- ИГРА 3 -->
             <div class="game-card">
-                <div class="card-image">
-                    <span style="font-size: 50px;">🚗</span>
-                    <div class="badge" style="color: #ffaa00; border-color: #ffaa00;">Alpha 0.9</div>
-                </div>
+                <div class="card-image"><span style="font-size: 50px;">🚗</span><div class="badge" style="color: #ffaa00; border-color: #ffaa00;">Alpha 0.9</div></div>
                 <div class="card-content">
                     <h2 class="card-title">Rebate</h2>
                     <p class="card-desc">Аналог классической GTA с видом сверху. Исследуй город, катайся по шоссе и уворачивайся от трафика. Первый шаг к большой 3D-игре!</p>
                     <a href="https://just21-art.github.io/Rebate/" class="play-btn" target="_blank">▶ ИГРАТЬ</a>
                 </div>
             </div>
-
         </main>
-
-        <footer>
-            © 2026 Just21. Сделано с душой и на чистом коде.
-        </footer>
+        <footer>© 2026 Just21. Сделано с душой и на чистом коде.</footer>
     </div>
 
     <script>
-        // Логика заставки
+        const bootScreen = document.getElementById('boot-screen');
+        const loginScreen = document.getElementById('login-screen');
+        const mainContent = document.getElementById('main-content');
+        const showCreateBtn = document.getElementById('showCreateBtn');
+        const createForm = document.getElementById('createForm');
+        const saveAccountBtn = document.getElementById('saveAccountBtn');
+        const userProfile = document.getElementById('userProfile');
+        const avatarLetter = document.getElementById('avatarLetter');
+        const displayName = document.getElementById('displayName');
+
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('boot-screen').classList.add('fade-out');
-                document.getElementById('main-content').classList.add('show');
+                bootScreen.classList.add('fade-out');
+                loginScreen.classList.add('active');
+                checkSavedAccount(); 
             }, 2500);
+        });
+
+        function checkSavedAccount() {
+            const savedName = localStorage.getItem('gs_username');
+            if (savedName) {
+                showCreateBtn.style.display = 'none';
+                createForm.style.display = 'none';
+                userProfile.style.display = 'flex';
+                avatarLetter.textContent = savedName.charAt(0).toUpperCase();
+                displayName.textContent = savedName;
+            } else {
+                showCreateBtn.style.display = 'flex';
+                userProfile.style.display = 'none';
+            }
+        }
+
+        showCreateBtn.addEventListener('click', () => {
+            showCreateBtn.style.display = 'none';
+            createForm.style.display = 'flex';
+        });
+
+        saveAccountBtn.addEventListener('click', () => {
+            const name = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+
+            if (name.length < 2) { alert("Имя должно быть не менее 2 символов!"); return; }
+            if (pass.length < 3) { alert("Пароль должен быть не менее 3 символов!"); return; }
+
+            localStorage.setItem('gs_username', name);
+            localStorage.setItem('gs_password', pass);
+            checkSavedAccount();
+        });
+
+        userProfile.addEventListener('click', () => {
+            loginScreen.classList.remove('active');
+            mainContent.style.display = 'block';
+            setTimeout(() => {
+                mainContent.classList.add('show');
+            }, 50);
         });
     </script>
 </body>
